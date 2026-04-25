@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>SEUS NUMEROS TEM SORTE???</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #111;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+
+        /* O Botão de Miniatura */
+        .launcher {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .launcher:hover { transform: scale(1.05); }
+
+        .launcher img {
+            width: 320px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,255,204,0.3);
+            border: 3px solid #444;
+        }
+
+        /* O Modal em Tela Cheia */
+        #gameModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: black;
+            z-index: 1000;
+        }
+
+        #gameFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: white;
+            font-size: 35px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* --- FORÇAR PORTRAIT (MODO VERTICAL) --- */
+        /* Se o celular/tablet for segurado deitado, rotacionamos o jogo -90 graus */
+        @media screen and (orientation: landscape) {
+            .portrait-force {
+                transform: rotate(-90deg);
+                transform-origin: center;
+                width: 100vh !important;
+                height: 100vw !important;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-top: -50vw;
+                margin-left: -50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="launcher" onclick="launchGame()">
+        <img src="game3.png" alt="">
+        <h2>SEUS NUMEROS TEM SORTE???</h2>
+    </div>
+
+    <div id="gameModal">
+        <span class="close-btn" onclick="closeGame()">&times;</span>
+        <div id="rotateContainer" style="width:100%; height:100%;">
+            <iframe id="gameFrame" src=""></iframe>
+        </div>
+    </div>
+
+    <script>
+        function launchGame() {
+            // Apontando para a pasta do seu jogo
+            document.getElementById('gameFrame').src = "Game3/index.html";
+            document.getElementById('gameModal').style.display = 'block';
+            
+            // Ativa a lógica de rotação portrait
+            document.getElementById('rotateContainer').classList.add('portrait-force');
+
+            // Solicita tela cheia
+            let elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE11 */
+                elem.msRequestFullscreen();
+            }
+        }
+
+        function closeGame() {
+            document.getElementById('gameFrame').src = "";
+            document.getElementById('gameModal').style.display = 'none';
+            
+            // Remove a classe para resetar a orientação se o launcher for landscape
+            document.getElementById('rotateContainer').classList.remove('portrait-force');
+
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>
